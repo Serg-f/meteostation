@@ -1,82 +1,123 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'css/index.css' %}" rel="stylesheet">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <img src="{% static 'img/logo.png' %}" alt="logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/settings">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/sea">Sea</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-sm-4">
+{% block extra_static %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">Weather Parameters</div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Atmosphere Pressure: 754.5 mm</li>
-                    <li class="list-group-item">Humidity: 48.25%</li>
-                    <li class="list-group-item">Temperature: 19.1°C (Average)</li>
-                    <li class="list-group-item">InfraRed Temperature: 17.47°C</li>
-                    <li class="list-group-item">Illumination: 5 Lux</li>
+                    <li class="list-group-item">
+                        <span class="parameter">Atmosphere Pressure:</span>
+                        <span class="value-container">
+                    <span class="value">754.5</span>
+                    <span class="unit">mm</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Humidity:</span>
+                        <span class="value-container">
+                    <span class="value">48.25</span>
+                    <span class="unit">%</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Temperature (Average):</span>
+                        <span class="value-container">
+                    <span class="value">19.1</span>
+                    <span class="unit">°C</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Temperature (InfraRed):</span>
+                        <span class="value-container">
+                    <span class="value">17.47</span>
+                    <span class="unit">°C</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Illumination:</span>
+                        <span class="value-container">
+                    <span class="value">5</span>
+                    <span class="unit">Lux</span>
+                </span>
+                    </li>
                 </ul>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">Wind & Power</div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Fluger Direction: 726 SW</li>
-                    <li class="list-group-item">Anemometer: 0 m/s</li>
-                    <li class="list-group-item">Power Supply: 5.08 V</li>
-                    <li class="list-group-item">Battery Voltage: 0.02 V</li>
+                    <li class="list-group-item">
+                        <span class="parameter">Weathervane Direction:</span>
+                        <span class="value-container">
+                            <span class="value">726 SW</span>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Anemometer:</span>
+                        <span class="value-container">
+                    <span class="value">0</span>
+                    <span class="unit">m/s</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Power Supply:</span>
+                        <span class="value-container">
+                    <span class="value">5.08</span>
+                    <span class="unit">V</span>
+                </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Battery Voltage:</span>
+                        <span class="value-container">
+                    <span class="value">0.02</span>
+                    <span class="unit">V</span>
+                </span>
+                    </li>
                 </ul>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">GPS Information</div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Status: Not Connected</li>
-                    <li class="list-group-item">Longitude: Not Available</li>
-                    <li class="list-group-item">Latitude: Not Available</li>
-                    <li class="list-group-item">Altitude: Not Available</li>
+                    <li class="list-group-item">
+                        <span class="parameter">Status:</span>
+                        <span class="value-container">
+                            <span class="value">No Data</span>
+                            <span class="unit"></span>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Longitude:</span>
+                        <span class="value-container">
+                            <span class="value">No Data</span>
+                            <span class="unit"></span>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Latitude:</span>
+                        <span class="value-container">
+                            <span class="value">No Data</span>
+                            <span class="unit"></span>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Altitude:</span>
+                        <span class="value-container">
+                            <span class="value">No Data</span>
+                            <span class="unit"></span>
+                        </span>
+                    </li>
                 </ul>
             </div>
         </div>
-    </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    </div>
+{% endblock %}

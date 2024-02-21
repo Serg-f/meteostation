@@ -1,23 +1,30 @@
-body {
-    /* add image static/img/wood.jpg as background */
-    background-image: url('/static/img/wood.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #fff;
-}
-
-.navbar-brand img {
-    height: 30px;
-}
-
 .card {
     background: rgba(0, 0, 0, 0.5);
-}
-
-.card-header, .card-body {
-    color: #fff;
+    margin-bottom: 1rem;
 }
 
 .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    white-space: nowrap;
     color: #333;
+    gap: 0.5rem;
+}
+
+.parameter {
+    font-weight: bold;
+    text-align: left;
+}
+
+.value-container {
+    text-align: right;
+}
+
+.value {
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.unit {
+    color: #666; /* Makes the unit a bit lighter */
 }

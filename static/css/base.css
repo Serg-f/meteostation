@@ -1,0 +1,28 @@
+html {
+    height: 100%; /* Make sure the html element fills the height */
+}
+
+body {
+    display: flex; /* Display body as a flex container */
+    flex-direction: column; /* Arrange children elements in a column */
+    min-height: 100%; /* Ensure it takes at least the viewport height */
+    background-image: url('/static/img/wood.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+}
+
+
+.navbar-brand img {
+    height: 30px;
+}
+
+.container {
+    flex: 1; /* Makes the container grow to fill the space, pushing the footer down */
+}
+
+footer {
+    background-color: #222;
+    color: #ccc;
+    font-size: 0.9em;
+}
