@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block extra_static %}
+    <link rel="stylesheet" href="{% static 'css/sea.css' %}">
 {% endblock %}
 
 {% block content %}
-<h1 class="text-center">This is the sea page</h1>
+    <audio src="{% static 'mp3/sea.mp3' %}" autoplay loop></audio>
 {% endblock %}

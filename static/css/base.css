@@ -1,12 +1,15 @@
-html {
-    height: 100%; /* Make sure the html element fills the height */
+html, body {
+    height: 100%;
+    min-height: 100%;
 }
+
 
 body {
     display: flex; /* Display body as a flex container */
     flex-direction: column; /* Arrange children elements in a column */
-    min-height: 100%; /* Ensure it takes at least the viewport height */
+    min-height: 100vh; /* Ensure it takes at least the viewport height */
     background-image: url('/static/img/wood.jpg');
+    background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
     color: #ffffff;
