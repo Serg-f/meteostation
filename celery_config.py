@@ -11,6 +11,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'process_controller_data': {
         'task': 'meteo_app.tasks.fetch_and_save_controller_data',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/1'),  # every minute at 0 seconds
     },
 }

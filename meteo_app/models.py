@@ -33,4 +33,4 @@ class ControllerData(models.Model):
     class Meta:
         verbose_name = 'Controller Data'
         verbose_name_plural = 'Controller Data'
-        ordering = ['-timestamp']
+

@@ -15,37 +15,37 @@
                     <li class="list-group-item">
                         <span class="parameter">Atmosphere Pressure:</span>
                         <span class="value-container">
-                    <span class="value">754.5</span>
-                    <span class="unit">mm</span>
-                </span>
+                            <span id="atm_pressure" class="value">754.5</span>
+                            <span class="unit">mm</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Humidity:</span>
                         <span class="value-container">
-                    <span class="value">48.25</span>
-                    <span class="unit">%</span>
-                </span>
+                            <span id="humidity" class="value">48.25</span>
+                            <span class="unit">%</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Temperature (Average):</span>
                         <span class="value-container">
-                    <span class="value">19.1</span>
-                    <span class="unit">°C</span>
-                </span>
+                            <span id="temperature_average" class="value">19.1</span>
+                            <span class="unit">°C</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Temperature (InfraRed):</span>
                         <span class="value-container">
-                    <span class="value">17.47</span>
-                    <span class="unit">°C</span>
-                </span>
+                            <span id="temperature_infrared" class="value">17.47</span>
+                            <span class="unit">°C</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Illumination:</span>
                         <span class="value-container">
-                    <span class="value">5</span>
-                    <span class="unit">Lux</span>
-                </span>
+                            <span id="illuminance" class="value">5</span>
+                            <span class="unit">Lux</span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -57,29 +57,30 @@
                     <li class="list-group-item">
                         <span class="parameter">Weathervane Direction:</span>
                         <span class="value-container">
-                            <span class="value">726 SW</span>
+                            <span id="wind_dir_numeric" class="value">726</span>
+                            <span id="wind_dir_abbr" class="value">NW</span>
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Anemometer:</span>
                         <span class="value-container">
-                    <span class="value">0</span>
-                    <span class="unit">m/s</span>
-                </span>
+                            <span id="wind_speed" class="value">0</span>
+                            <span class="unit">m/s</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Power Supply:</span>
                         <span class="value-container">
-                    <span class="value">5.08</span>
-                    <span class="unit">V</span>
-                </span>
+                            <span id="power_supply" class="value">5.08</span>
+                            <span class="unit">V</span>
+                        </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Battery Voltage:</span>
                         <span class="value-container">
-                    <span class="value">0.02</span>
-                    <span class="unit">V</span>
-                </span>
+                            <span id="battery_voltage" class="value">0.02</span>
+                            <span class="unit">V</span>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -91,34 +92,76 @@
                     <li class="list-group-item">
                         <span class="parameter">Status:</span>
                         <span class="value-container">
-                            <span class="value">No Data</span>
-                            <span class="unit"></span>
+                            <span id="gps_status" class="value">No Data</span>
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Longitude:</span>
                         <span class="value-container">
-                            <span class="value">No Data</span>
-                            <span class="unit"></span>
+                            <span id="gps_longitude" class="value">No Data</span>
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Latitude:</span>
                         <span class="value-container">
-                            <span class="value">No Data</span>
-                            <span class="unit"></span>
+                            <span id="gps_latitude" class="value">No Data</span>
                         </span>
                     </li>
                     <li class="list-group-item">
                         <span class="parameter">Altitude:</span>
                         <span class="value-container">
-                            <span class="value">No Data</span>
-                            <span class="unit"></span>
+                            <span id="gps_altitude" class="value">No Data</span>
                         </span>
                     </li>
                 </ul>
             </div>
         </div>
-
     </div>
+    <script>
+        // Establish the SSE connection
+        let eventSource = new EventSource('/api/weather_data_sse/');
+
+        // Function to handle incoming messages
+        eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            // Check for errors in the data
+            if (data.error) {
+                console.error("Error from server:", data.error);
+                // display this error to the user
+                alert("Error retrieving data from server: " + data.error);
+                return;
+            }
+
+            // Update DOM elements with new data
+            document.getElementById('atm_pressure').textContent = data.atm_pressure || "N/A";
+            document.getElementById('humidity').textContent = data.humidity || "N/A";
+            document.getElementById('temperature_average').textContent = data.temperature_average || "N/A";
+            document.getElementById('temperature_infrared').textContent = data.temperature_infrared || "N/A";
+            document.getElementById('illuminance').textContent = data.illuminance || "N/A";
+            document.getElementById('wind_dir_numeric').textContent = data.wind_dir_numeric || "N/A";
+            document.getElementById('wind_dir_abbr').textContent = data.wind_dir_abbr || "N/A";
+            document.getElementById('wind_speed').textContent = data.wind_speed || "N/A";
+            document.getElementById('power_supply').textContent = data.power_supply || "N/A";
+            document.getElementById('battery_voltage').textContent = data.battery_voltage || "N/A";
+            document.getElementById('gps_status').textContent = data.gps_status ? "Active" : "Inactive";
+            document.getElementById('gps_longitude').textContent = data.gps_longitude || "N/A";
+            document.getElementById('gps_latitude').textContent = data.gps_latitude || "N/A";
+            document.getElementById('gps_altitude').textContent = data.gps_altitude || "N/A";
+        };
+
+        // Handle errors
+        eventSource.onerror = function (event) {
+            console.error("SSE error:", event);
+            // Close the current connection
+            eventSource.close();
+            // Attempt to reconnect after 5 seconds
+            setTimeout(function () {
+                console.log("Attempting to reconnect...");
+                eventSource = new EventSource('/api/weather_data_sse/');
+            }, 5000);
+        };
+    </script>
+
+
 {% endblock %}
