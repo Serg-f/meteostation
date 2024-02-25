@@ -1,5 +1,6 @@
 from threading import Event
 
+import redis
 from django.views import View
 from django.views.generic import TemplateView
 from rest_framework.response import Response
@@ -45,15 +46,16 @@ class LastControllerDataAPIView(APIView):
 
 # Function to yield data as it becomes available
 def event_stream():
-    last_checked = None
-    while True:
-        new_data = ControllerData.objects.filter(
-            timestamp__gt=last_checked).last() if last_checked else ControllerData.objects.last()
-        if new_data:
-            last_checked = new_data.timestamp
-            yield f"data: {json.dumps(ControllerDataSerializer(new_data).data)}\n\n"
-            print(f"Sent new data at {datetime.now()}")
-        time.sleep(10)  # Wait for 10 seconds before checking for new data
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    pubsub = r.pubsub()
+    pubsub.subscribe('weather_data_channel')
+
+    for message in pubsub.listen():
+        if message['type'] == 'message':
+            new_data = ControllerData.objects.last()
+            if new_data:
+                yield f"data: {json.dumps(ControllerDataSerializer(new_data).data)}\n\n"
+                print(f"Sent new data at {datetime.now()}")
 
 
 class WeatherDataSSEView(View):

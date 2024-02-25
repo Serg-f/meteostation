@@ -131,3 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery Configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# Controller data process delay
+CONTROLLER_DATA_PROCESS_DELAY = 5
