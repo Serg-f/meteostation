@@ -54,7 +54,9 @@ def event_stream():
         if message['type'] == 'message':
             new_data = ControllerData.objects.last()
             if new_data:
-                yield f"data: {json.dumps(ControllerDataSerializer(new_data).data)}\n\n"
+                send_data = ControllerDataSerializer(new_data).data
+                send_data['wind_dir_abbr'] = new_data.wind_dir_abbr
+                yield f"data: {json.dumps(send_data)}\n\n"
                 print(f"Sent new data at {datetime.now()}")
 
 

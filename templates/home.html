@@ -113,6 +113,12 @@
                             <span id="gps_altitude" class="value">No Data</span>
                         </span>
                     </li>
+                    <li class="list-group-item">
+                        <span class="parameter">Timestamp:</span>
+                        <span class="value-container">
+                            <span id="timestamp" class="value">No Data</span>
+                        </span>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -148,6 +154,11 @@
             document.getElementById('gps_longitude').textContent = data.gps_longitude || "N/A";
             document.getElementById('gps_latitude').textContent = data.gps_latitude || "N/A";
             document.getElementById('gps_altitude').textContent = data.gps_altitude || "N/A";
+            // Format the timestamp as a time with hours, minutes, and seconds
+            document.getElementById('timestamp').textContent = data.timestamp ? 
+                new Date(data.timestamp).toLocaleTimeString([], 
+                    { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "N/A";
+
         };
 
         // Handle errors
