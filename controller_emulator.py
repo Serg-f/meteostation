@@ -7,7 +7,7 @@ initial_data = (
     ('temperature_average', 19.1),
     ('temperature_infrared', 17.47),
     ('illuminance', 5.0),
-    ('wind_dir_numeric', 726),
+    ('wind_dir_numeric', 730),
     ('wind_speed', 0.3),
     ('power_supply', 5.08),
     ('battery_voltage', 0.02),
@@ -26,7 +26,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         global counter
         counter = counter + 1 if counter < 5 else 0
 
-        controller_data = initial_data.copy()
+        controller_data = dict(initial_data)
         for k, v in controller_data.items():
             if type(v) in [float, int]:
                 controller_data[k] += counter
