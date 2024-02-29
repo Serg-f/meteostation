@@ -12,9 +12,9 @@ initial_data = (
     ('power_supply', 5.08),
     ('battery_voltage', 0.02),
     ('gps_status', False),
-    ('gps_longitude', None),
-    ('gps_latitude', None),
-    ('gps_altitude', None)
+    # ('gps_longitude', None),
+    # ('gps_latitude', None),
+    # ('gps_altitude', None)
 )
 
 counter = 0
