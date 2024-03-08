@@ -1,0 +1,82 @@
+version: "3.8"
+services:
+  redis:
+    image: "redis"
+    container_name: "redis_con"
+
+  db:
+    image: "postgres:14"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    container_name: "postgresql_con"
+
+  controller:
+    build: ./controller
+    command: python /project_dir/emulator.py
+    volumes:
+      - ./controller/src:/project_dir
+    container_name: "controller_con"
+
+  main_server:
+    build: ./main
+    environment:
+      DEBUG: "${DEBUG}"
+      SECRET_KEY: "${SECRET_KEY}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    command: python /project_dir/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./main/src:/project_dir
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    container_name: "main_server_con"
+
+  celery_worker:
+    build: ./main
+    environment:
+      DEBUG: "${DEBUG}"
+      SECRET_KEY: "${SECRET_KEY}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    command: celery -A meteostation worker --loglevel=info
+    volumes:
+      - ./main/src:/project_dir
+    depends_on:
+      - db
+      - redis
+      - controller
+      - main_server
+    container_name: "celery_worker_con"
+
+  celery_beat:
+    build: ./main
+    environment:
+      DEBUG: "${DEBUG}"
+      SECRET_KEY: "${SECRET_KEY}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    command: celery -A meteostation beat --loglevel=info
+    volumes:
+      - ./main/src:/project_dir
+    depends_on:
+      - db
+      - redis
+      - main_server
+      - controller
+      - celery_worker
+    container_name: "celery_beat_con"

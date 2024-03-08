@@ -9,23 +9,35 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import json
 from pathlib import Path
+import os
+
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_variable(var_name):
+    """Get the environment variable or return exception."""
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = f"Set the {var_name} environment variable."
+        raise ImproperlyConfigured(error_msg)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4q*pxz4_9nto+wv6xga!0&w6j=seove0z(w)*f2f%b^un32xma'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,8 +90,12 @@ WSGI_APPLICATION = 'meteostation.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -130,7 +146,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery Configuration
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 # Controller data process delay
 CONTROLLER_DATA_PROCESS_DELAY = 5

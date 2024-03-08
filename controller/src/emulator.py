@@ -46,5 +46,5 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     port = 8001
     print(f"Server running on port {port}...")
-    httpd = HTTPServer(('localhost', port), SimpleHTTPRequestHandler)
+    httpd = HTTPServer(('0.0.0.0', port), SimpleHTTPRequestHandler)
     httpd.serve_forever()

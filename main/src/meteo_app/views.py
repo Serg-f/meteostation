@@ -46,7 +46,7 @@ class LastControllerDataAPIView(APIView):
 
 # Function to yield data as it becomes available
 def event_stream():
-    r = redis.Redis(host='localhost', port=6379, db=0)
+    r = redis.Redis(host='redis', port=6379, db=0)
     pubsub = r.pubsub()
     pubsub.subscribe('weather_data_channel')
 
