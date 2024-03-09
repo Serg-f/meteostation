@@ -9,24 +9,12 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import json
 from pathlib import Path
 import os
 
-from django.core.exceptions import ImproperlyConfigured
-
-
-def get_env_variable(var_name):
-    """Get the environment variable or return exception."""
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = f"Set the {var_name} environment variable."
-        raise ImproperlyConfigured(error_msg)
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/

@@ -18,7 +18,7 @@ services:
 
   controller:
     build: ./controller
-    command: python /project_dir/emulator.py
+    command: uvicorn emulator:app --host 0.0.0.0 --port 8001
     volumes:
       - ./controller/src:/project_dir
     container_name: "controller_con"

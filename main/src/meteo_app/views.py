@@ -1,18 +1,15 @@
-from threading import Event
-
 import redis
 from django.views import View
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from meteo_app.models import ControllerData
-from meteo_app.serializers import ControllerDataSerializer
+from .models import ControllerData
+from .serializers import ControllerDataSerializer
 
 from django.http import StreamingHttpResponse
 import json
 from datetime import datetime
-import time
 
 
 class HomeView(TemplateView):

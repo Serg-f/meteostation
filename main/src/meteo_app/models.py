@@ -15,7 +15,7 @@ class ControllerData(models.Model):
     wind_speed = models.FloatField(default=None, null=True, blank=True)
     power_supply = models.FloatField(default=None, null=True, blank=True)
     battery_voltage = models.FloatField(default=None, null=True, blank=True)
-    gps_status = models.BooleanField(default=None, null=True, blank=True)
+    gps_status = models.BooleanField(default=False)
     gps_longitude = models.FloatField(default=None, null=True, blank=True)
     gps_latitude = models.FloatField(default=None, null=True, blank=True)
     gps_altitude = models.FloatField(default=None, null=True, blank=True)
