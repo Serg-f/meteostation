@@ -4,7 +4,7 @@ import BaseLayout from "./BaseLayout";
 const About = () => {
     return (
         <BaseLayout>
-        <h1>About</h1>
+        <h1 style={{fontFamily: "monospace"}}>hello world</h1>
         </BaseLayout>
     );
 }
