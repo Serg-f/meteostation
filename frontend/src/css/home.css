@@ -1,0 +1,31 @@
+.card {
+    background: rgba(0, 0, 0, 0.5);
+    margin-bottom: 1rem;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    white-space: nowrap;
+    color: #333;
+    gap: 0.5rem;
+}
+
+.parameter {
+    font-weight: bold;
+    text-align: left;
+}
+
+.value-container {
+    text-align: right;
+}
+
+.value {
+    font-weight: bold;
+    font-family: monospace;
+    margin-right: 0.25em;
+}
+
+.unit {
+    color: #666;
+}
