@@ -1,5 +1,5 @@
 // src/components/Home.js
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import BaseLayout from './BaseLayout';
 import '../css/home.css';
 
@@ -15,11 +15,11 @@ const Home = () => {
         wind_speed: "N/A",
         power_supply: "N/A",
         battery_voltage: "N/A",
-        gps_status: "No Data",
-        gps_longitude: "No Data",
-        gps_latitude: "No Data",
-        gps_altitude: "No Data",
-        timestamp: "No Data"
+        gps_status: "N/A",
+        gps_longitude: "N/A",
+        gps_latitude: "N/A",
+        gps_altitude: "N/A",
+        timestamp: "N/A"
     });
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const Home = () => {
                     return acc;
                 }, {});
 
-                setWeatherData(prevData => ({ ...prevData, ...filteredData }));
+                setWeatherData(prevData => ({...prevData, ...filteredData}));
             }
         };
 
@@ -69,35 +69,40 @@ const Home = () => {
                             <li className="list-group-item">
                                 <span className="parameter">Atmosphere Pressure:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.atm_pressure}</span>
+                                    <span className="value">{parseFloat(weatherData.atm_pressure) ?
+                                        parseFloat(weatherData.atm_pressure).toFixed(1) : 'N/A'}</span>
                                     <span className="unit">mm</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Humidity:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.humidity}</span>
+                                    <span className="value">{parseFloat(weatherData.humidity) ?
+                                        parseFloat(weatherData.humidity).toFixed(2) : 'N/A'}</span>
                                     <span className="unit">%</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Temperature (Average):</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.temperature_average}</span>
+                                    <span className="value">{parseFloat(weatherData.temperature_average) ?
+                                        parseFloat(weatherData.temperature_average).toFixed(1) : 'N/A'}</span>
                                     <span className="unit">°C</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Temperature (InfraRed):</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.temperature_infrared}</span>
+                                    <span className="value">{parseFloat(weatherData.temperature_infrared) ?
+                                        parseFloat(weatherData.temperature_infrared).toFixed(2) : 'N/A'}</span>
                                     <span className="unit">°C</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Illumination:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.illuminance}</span>
+                                    <span className="value">{parseFloat(weatherData.illuminance) ?
+                                        parseFloat(weatherData.illuminance).toFixed(1) : 'N/A'}</span>
                                     <span className="unit">Lux</span>
                                 </span>
                             </li>
@@ -110,30 +115,38 @@ const Home = () => {
                         <div className="card-header">Wind & Power</div>
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item">
-                                <span className="parameter">Weathervane Direction:</span>
+                                <span className="parameter">Wind Direction:</span>
                                 <span className="value-container">
                                     <span className="value">{weatherData.wind_dir_numeric}</span>
+                                </span>
+                            </li>
+                            <li className="list-group-item">
+                                <span className="parameter">Wind Direction ABBR:</span>
+                                <span className="value-container">
                                     <span className="value">{weatherData.wind_dir_abbr}</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
-                                <span className="parameter">Anemometer:</span>
+                                <span className="parameter">Wind Speed:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.wind_speed}</span>
+                                    <span className="value">{parseFloat(weatherData.wind_speed) ?
+                                        parseFloat(weatherData.wind_speed).toFixed(1) : 'N/A'}</span>
                                     <span className="unit">m/s</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Power Supply:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.power_supply}</span>
+                                    <span className="value">{parseFloat(weatherData.power_supply) ?
+                                        parseFloat(weatherData.power_supply).toFixed(2) : 'N/A'}</span>
                                     <span className="unit">V</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Battery Voltage:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.battery_voltage}</span>
+                                    <span className="value">{parseFloat(weatherData.battery_voltage) ?
+                                        parseFloat(weatherData.battery_voltage).toFixed(2) : 'N/A'}</span>
                                     <span className="unit">V</span>
                                 </span>
                             </li>
@@ -154,25 +167,29 @@ const Home = () => {
                             <li className="list-group-item">
                                 <span className="parameter">Longitude:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.gps_longitude}</span>
+                                    <span className="value">{parseFloat(weatherData.gps_longitude) ?
+                                        parseFloat(weatherData.gps_longitude).toFixed(6) : 'N/A'}</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Latitude:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.gps_latitude}</span>
+                                    <span className="value">{parseFloat(weatherData.gps_latitude) ?
+                                        parseFloat(weatherData.gps_latitude).toFixed(6) : 'N/A'}</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Altitude:</span>
                                 <span className="value-container">
-                                    <span className="value">{weatherData.gps_altitude}</span>
+                                    <span className="value">{parseFloat(weatherData.gps_altitude) ?
+                                        parseFloat(weatherData.gps_altitude).toFixed(1) : 'N/A'}</span>
                                 </span>
                             </li>
                             <li className="list-group-item">
                                 <span className="parameter">Timestamp:</span>
                                 <span className="value-container">
-                                    <span className="value">{new Date(weatherData.timestamp).toLocaleTimeString()}</span>
+                                    <span
+                                        className="value">{new Date(weatherData.timestamp).toLocaleTimeString()}</span>
                                 </span>
                             </li>
                         </ul>
