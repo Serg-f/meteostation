@@ -1,63 +1,67 @@
 import redis
 from django.views import View
-from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .models import ControllerData
 from .serializers import ControllerDataSerializer
-
 from django.http import StreamingHttpResponse
 import json
 from datetime import datetime
+import logging
 
-
-class HomeView(TemplateView):
-    template_name = 'home.html'
-    extra_context = {'menu': 0}
-
-
-class SettingsView(TemplateView):
-    template_name = 'settings.html'
-    extra_context = {'menu': 1}
-
-
-class SeaView(TemplateView):
-    template_name = 'sea.html'
-    extra_context = {'menu': 2}
-
-
-class AboutView(TemplateView):
-    template_name = 'about.html'
-    extra_context = {'menu': 3}
+# Configure logger
+logger = logging.getLogger(__name__)
 
 
 class LastControllerDataAPIView(APIView):
     def get(self, request):
-        last_data = ControllerData.objects.last()
-        serializer = ControllerDataSerializer(last_data)
-        response_data = serializer.data
-        response_data['wind_dir_abbr'] = last_data.wind_dir_abbr
-        return Response(response_data)
+        logger.debug("Fetching the last controller data")
+        try:
+            last_data = ControllerData.objects.last()
+            if last_data:
+                serializer = ControllerDataSerializer(last_data)
+                response_data = serializer.data
+                response_data['wind_dir_abbr'] = last_data.wind_dir_abbr
+                logger.info("Successfully fetched and serialized the last controller data")
+                return Response(response_data)
+            else:
+                logger.warning("No last controller data found")
+                return Response({"error": "No data available"}, status=404)
+        except Exception as e:
+            logger.error(f"Error fetching last controller data: {str(e)}", exc_info=True)
+            return Response({"error": "Internal server error"}, status=500)
 
 
 # Function to yield data as it becomes available
 def event_stream():
+    logger.debug("Starting event stream")
     r = redis.Redis(host='redis', port=6379, db=0)
     pubsub = r.pubsub()
     pubsub.subscribe('weather_data_channel')
 
     for message in pubsub.listen():
         if message['type'] == 'message':
-            new_data = ControllerData.objects.last()
-            if new_data:
-                send_data = ControllerDataSerializer(new_data).data
-                send_data['wind_dir_abbr'] = new_data.wind_dir_abbr
-                yield f"data: {json.dumps(send_data)}\n\n"
-                print(f"Sent new data at {datetime.now()}")
+            try:
+                new_data = ControllerData.objects.last()
+                if new_data:
+                    send_data = ControllerDataSerializer(new_data).data
+                    send_data['wind_dir_abbr'] = new_data.wind_dir_abbr
+                    yield f"data: {json.dumps(send_data)}\n\n"
+                    logger.info(f"Sent new data at {datetime.now()}")
+                else:
+                    logger.warning("Attempted to send new data but found none")
+            except Exception as e:
+                logger.error(f"Error during event stream: {str(e)}", exc_info=True)
+                break  # Exit the loop if an error occurs
 
 
 class WeatherDataSSEView(View):
     def get(self, request):
-        response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
-        return response
+        logger.debug("Request received for WeatherDataSSEView")
+        try:
+            response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+            logger.info("Weather data SSE stream established")
+            return response
+        except Exception as e:
+            logger.critical(f"Failed to establish SSE stream: {str(e)}", exc_info=True)
+            return Response({"error": "Internal server error"}, status=500)

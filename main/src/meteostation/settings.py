@@ -9,12 +9,20 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import logging
 from pathlib import Path
 import os
 
+# Logging
+log_level = os.getenv('LOG_LEVEL').upper()
+logging.basicConfig(level=log_level)
+logger = logging.getLogger(__name__)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
+logger.debug(f"Django BASE_DIR: {BASE_DIR}")
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -25,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
 
 
 # Application definition
