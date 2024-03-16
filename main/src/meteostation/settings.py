@@ -80,6 +80,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'meteostation.wsgi.application'
+ASGI_APPLICATION = 'meteostation.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
+
 
 
 # Database

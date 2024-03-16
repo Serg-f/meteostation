@@ -21,7 +21,7 @@ initial_data = {
     # 'gps_altitude':       {'value': 30.0,     'scale_factor': 0.01},
 }
 
-start_time = datetime.now()
+start_time = datetime(2024, 3, 15, 0, 0, 0)
 
 
 def calculate_fluctuations(elapsed_time_seconds):
