@@ -1,28 +1,46 @@
 .dashboard-container {
-    background: rgba(0, 0, 0, 0.8); /* Set overall card background transparency */
-    border-radius: 8px; /* Optional: rounded corners */
-    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 20px 10px;
     color: #FFF;
 }
 
-/* Enhance select and input fields appearance */
-.parameter-select select,
-.datetime-input input {
-    background: rgba(255, 255, 255, 0.2); /* Slightly lighter background for inputs */
-    color: #FFF; /* White text for readability */
-    border: 1px solid #888; /* Lighter border for better visibility */
-}
-
-.canvas-container {
+.chart-and-draggers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 20px;
 }
 
-/* Optional: Additional styling adjustments for your chart */
-.chart-container {
-    padding: 20px;
+.dragger-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 5px;
+    cursor: ew-resize;
 }
 
-/* Ensure the canvas itself does not have a background, to respect the chart's styling */
-#weatherChart, .canvas-container canvas {
-    background: transparent;
+.dragger {
+    background-color: #888;
+    width: 5px;
+    height: 150px; /* As you've set */
+}
+
+.dragger-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px; /* Adjust based on your preference */
+    color: #888; /* Icon color */
+}
+
+.chart-container {
+    flex-grow: 1;
+    height: 400px;
+    position: relative;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
 }

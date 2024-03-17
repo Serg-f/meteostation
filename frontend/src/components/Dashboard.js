@@ -41,6 +41,33 @@ const Dashboard = () => {
         {value: 'wind_speed', label: 'Wind Speed'},
     ];
 
+    const handleDrag = (type) => (event) => {
+        event.preventDefault();
+        const originalX = event.clientX;
+        const originalDate = type === 'start' ? new Date(startDatetime) : new Date(endDatetime);
+
+        const updateDate = (moveEvent) => {
+            const diffX = moveEvent.clientX - originalX;
+            const speed = Math.max(1, Math.abs(diffX) / 100);
+            let newDate = new Date(originalDate.getTime() + diffX * 60 * 1000 * speed);
+
+            if (type === 'start') {
+                setStartDatetime(formatDate(newDate));
+            } else {
+                setEndDatetime(formatDate(newDate));
+            }
+        };
+
+        const stopDrag = () => {
+            document.removeEventListener('mousemove', updateDate);
+            document.removeEventListener('mouseup', stopDrag);
+        };
+
+        document.addEventListener('mousemove', updateDate);
+        document.addEventListener('mouseup', stopDrag);
+    };
+
+
     useEffect(() => {
         ws.current = new WebSocket('ws://localhost:8000/ws/dashboard/');
         ws.current.onopen = () => {
@@ -168,28 +195,37 @@ const Dashboard = () => {
 
     return (
         <BaseLayout>
-            <div className="dashboard-container"> {/* Apply card styles for consistency */}
-                <div>
+            <div className="dashboard-container">
+                <div className="parameter-selection">
                     <label htmlFor="parameter-select">Select Parameter:</label>
-                    <select id="parameter-select" value={parameter}
-                            onChange={(e) => setParameter(e.target.value)}>
+                    <select id="parameter-select" value={parameter} onChange={(e) => setParameter(e.target.value)}>
                         {parameters.map(param => (
                             <option key={param.value} value={param.value}>{param.label}</option>
                         ))}
                     </select>
                 </div>
-                <div>
+                <div className="datetime-selection">
                     <label htmlFor="start-datetime">Start Date and Time:</label>
                     <input type="datetime-local" id="start-datetime" value={startDatetime}
                            onChange={(e) => setStartDatetime(e.target.value)}/>
                 </div>
-                <div>
+                <div className="datetime-selection">
                     <label htmlFor="end-datetime">End Date and Time:</label>
                     <input type="datetime-local" id="end-datetime" value={endDatetime}
                            onChange={(e) => setEndDatetime(e.target.value)}/>
                 </div>
-                <div style={{height: '400px', marginTop: '20px'}}>
-                    <canvas ref={chartRef}></canvas>
+                <div className="chart-and-draggers">
+                    <div className="dragger-container"  onMouseDown={handleDrag('start')}>
+                        <div className="dragger start-dragger"></div>
+                        <div className="dragger-icon">↔</div>
+                    </div>
+                    <div className="chart-container">
+                        <canvas ref={chartRef}></canvas>
+                    </div>
+                    <div className="dragger-container" onMouseDown={handleDrag('end')}>
+                        <div className="dragger end-dragger"></div>
+                        <div className="dragger-icon">↔</div>
+                    </div>
                 </div>
             </div>
         </BaseLayout>
