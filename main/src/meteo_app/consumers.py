@@ -1,3 +1,5 @@
+import logging
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
@@ -8,18 +10,24 @@ from django.utils.dateparse import parse_datetime
 from django.utils.timezone import make_aware, get_default_timezone
 
 
+logger = logging.getLogger(__name__)
+
+
 class DashboardConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
+        logger.info("WebSocket connected")
 
     async def disconnect(self, close_code):
-        pass
+        logger.info(f"WebSocket disconnected; close_code: {close_code}")
 
     async def receive(self, text_data=None, bytes_data=None):
+        logger.info(f"Received data: {text_data}")
         data = await self.get_data(text_data)
-        await self.send(text_data=json.dumps({
-            'data': data
-        }))
+        response_data = json.dumps({'data': data})
+        await self.send(text_data=response_data)
+        logger.info(f"Sent data: {response_data}")
+
 
     @sync_to_async
     def get_data(self, text_data):
