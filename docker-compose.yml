@@ -85,10 +85,10 @@ services:
       - celery_worker
     container_name: "celery_beat_con"
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      - main_server
-    container_name: "frontend_con"
+#  frontend:
+#    build: ./frontend
+#    ports:
+#      - "3000:80"
+#    depends_on:
+#      - main_server
+#    container_name: "frontend_con"
