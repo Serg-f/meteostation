@@ -44,3 +44,7 @@ canvas {
     width: 100% !important;
     height: 100% !important;
 }
+
+.dashboard-container div label {
+    margin-right: 1em;
+}

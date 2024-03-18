@@ -68,7 +68,6 @@ const Dashboard = () => {
             {value: 'wind_speed', label: 'Wind Speed', unit: 'm/s'},
             {value: 'power_supply', label: 'Power Supply', unit: 'V'},
             {value: 'battery_voltage', label: 'Battery Voltage', unit: 'V'},
-            {value: 'gps_status', label: 'GPS Status', unit: ''},
             {value: 'gps_longitude', label: 'GPS Longitude', unit: '°'},
             {value: 'gps_latitude', label: 'GPS Latitude', unit: '°'},
             {value: 'gps_altitude', label: 'GPS Altitude', unit: 'm'},
@@ -77,8 +76,6 @@ const Dashboard = () => {
         const requestData = useCallback(() => {
             if (ws.current.readyState === WebSocket.OPEN) {
                 ws.current.send(JSON.stringify({parameter, start: startDatetime, end: endDatetime}));
-            } else {
-                console.error('WebSocket is not open. Cannot send data.');
             }
         }, [startDatetime, endDatetime, parameter]); // Include all dependencies here
 
@@ -105,7 +102,7 @@ const Dashboard = () => {
             const moveHandler = (moveEvent) => {
                 const dx = moveEvent.clientX - originalX;
                 const fetchDx = moveEvent.clientX - lastFetchX;
-                const timeAdjustment = Math.round(dx / 5) * 60 * 60 * 1000;
+                const timeAdjustment = Math.round(dx / 20) * 60 * 60 * 1000;
 
                 const newDate = new Date(originalDate.getTime() + timeAdjustment);
                 const newDatetime = formatDate(newDate);

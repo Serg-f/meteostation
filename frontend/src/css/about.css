@@ -1,0 +1,15 @@
+.about a {
+    color: #fce581 !important;
+    position: absolute;
+    bottom: 80px;
+    right: 50px;
+    margin: 10px;
+    font-family: monospace;
+}
+
+h1 {
+    color: #fce581;
+    font-family: monospace;
+    text-align: center;
+    margin-top: 50px;
+}
