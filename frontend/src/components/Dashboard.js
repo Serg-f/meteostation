@@ -32,12 +32,19 @@ const Dashboard = () => {
         const isParameterChanged = useRef(false);
 
         const parameters = [
-            {value: 'atm_pressure', label: 'Atmospheric Pressure'},
-            {value: 'humidity', label: 'Humidity'},
-            {value: 'temperature_average', label: 'Temperature (Average)'},
-            {value: 'temperature_infrared', label: 'Temperature (Infrared)'},
-            {value: 'illuminance', label: 'Illuminance'},
-            {value: 'wind_speed', label: 'Wind Speed'},
+            {value: 'atm_pressure', label: 'Atmospheric Pressure', unit: 'mmHg'},
+            {value: 'humidity', label: 'Humidity', unit: '%'},
+            {value: 'temperature_average', label: 'Temperature (Average)', unit: '°C'},
+            {value: 'temperature_infrared', label: 'Temperature (Infrared)', unit: '°C'},
+            {value: 'illuminance', label: 'Illuminance', unit: 'lux'},
+            {value: 'wind_dir_numeric', label: 'Wind Direction', unit: '°'},
+            {value: 'wind_speed', label: 'Wind Speed', unit: 'm/s'},
+            {value: 'power_supply', label: 'Power Supply', unit: 'V'},
+            {value: 'battery_voltage', label: 'Battery Voltage', unit: 'V'},
+            {value: 'gps_status', label: 'GPS Status', unit: ''},
+            {value: 'gps_longitude', label: 'GPS Longitude', unit: '°'},
+            {value: 'gps_latitude', label: 'GPS Latitude', unit: '°'},
+            {value: 'gps_altitude', label: 'GPS Altitude', unit: 'm'},
         ];
 
         const requestData = useCallback(() => {
@@ -141,13 +148,19 @@ const Dashboard = () => {
         }, [parameter, startDatetime, endDatetime]);
 
         const updateChart = (data, parameterChanged) => {
+            const parameterSelectElement = document.getElementById('parameter-select');
+            const currentParameterValue = parameterSelectElement.value;
+            const selectedParameter = parameters.find(p => p.value === currentParameterValue);
+            const yAxisTitle = `${selectedParameter.label} (${selectedParameter.unit})`; // Compose Y-axis title with unit
+
             if (chartInstanceRef.current && !parameterChanged) {
                 const chart = chartInstanceRef.current;
                 chart.data.labels = data.map(d => d.timestamp);
                 chart.data.datasets.forEach((dataset) => {
                     dataset.data = data.map(d => d.value);
-                    dataset.label = parameters.find(p => p.value === parameter).label;
+                    dataset.label = yAxisTitle; // Use composed Y-axis title
                 });
+                chart.options.scales.y.title.text = yAxisTitle; // Update Y-axis title dynamically
                 chart.update();
             } else {
                 if (chartInstanceRef.current) {
@@ -159,7 +172,7 @@ const Dashboard = () => {
                     data: {
                         labels: data.map(d => d.timestamp),
                         datasets: [{
-                            label: parameters.find(p => p.value === parameter).label,
+                            label: yAxisTitle, // Use composed Y-axis title
                             data: data.map(d => d.value),
                             backgroundColor: 'rgba(0, 0, 0, 0.7)', // Adjusted background color
                             borderColor: 'rgb(75, 192, 192)',
@@ -172,7 +185,7 @@ const Dashboard = () => {
                                 type: 'time',
                                 time: {
                                     tooltipFormat: 'dd MMM yyyy HH:mm',
-                                    unit: 'hour' // Adjust this as necessary based on your data
+                                    unit: 'day'
                                 },
                                 title: {
                                     display: true,
@@ -188,7 +201,7 @@ const Dashboard = () => {
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'Value'
+                                    text: yAxisTitle // Dynamically set Y-axis title
                                 },
                                 ticks: {
                                     color: '#FFF' // Improved visibility for ticks
@@ -226,6 +239,7 @@ const Dashboard = () => {
                 });
             }
         };
+
 
         return (
             <BaseLayout>
