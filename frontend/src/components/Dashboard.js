@@ -22,14 +22,41 @@ const Dashboard = () => {
             const minutes = (`0${date.getMinutes()}`).slice(-2);
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         };
+
+        // Utility function to parse date strings
+        const parseDate = (dateString) => new Date(dateString);
+
         const [parameter, setParameter] = useState('temperature_average');
-        const [startDatetime, setStartDatetime] = useState(formatDate(yesterday));
-        const [endDatetime, setEndDatetime] = useState(formatDate(today));
+        const [startDatetime, setStartDatetimeRaw] = useState(formatDate(yesterday));
+        const [endDatetime, setEndDatetimeRaw] = useState(formatDate(today));
         const chartRef = useRef(null);
         const ws = useRef(null);
         const chartInstanceRef = useRef(null);
         const previousParameter = useRef(parameter);
         const isParameterChanged = useRef(false);
+
+        // Wrapped in useCallback to ensure stable identity
+        const setStartDatetime = useCallback((newStart) => {
+            const end = parseDate(endDatetime);
+            const start = parseDate(newStart);
+            if (end - start < 3600 * 1000) { // Less than 1-hour difference
+                setStartDatetimeRaw(formatDate(new Date(end.getTime() - 3600 * 1000)));
+            } else {
+                setStartDatetimeRaw(newStart);
+            }
+        }, [endDatetime]);
+
+        // Wrapped in useCallback to ensure stable identity
+        const setEndDatetime = useCallback((newEnd) => {
+            const start = parseDate(startDatetime);
+            const end = parseDate(newEnd);
+            if (end - start < 3600 * 1000) { // Less than 1 hour difference
+                setEndDatetimeRaw(formatDate(new Date(start.getTime() + 3600 * 1000)));
+            } else {
+                setEndDatetimeRaw(newEnd);
+            }
+        }, [startDatetime]);
+
 
         const parameters = [
             {value: 'atm_pressure', label: 'Atmospheric Pressure', unit: 'mmHg'},
