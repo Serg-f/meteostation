@@ -268,23 +268,26 @@ const Dashboard = () => {
         return (
             <BaseLayout>
                 <div className="dashboard-container">
-                    <div className="parameter-selection">
-                        <label htmlFor="parameter-select">Select Parameter:</label>
-                        <select id="parameter-select" value={parameter} onChange={(e) => setParameter(e.target.value)}>
-                            {parameters.map(param => (
-                                <option key={param.value} value={param.value}>{param.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="datetime-selection">
-                        <label htmlFor="start-datetime">Start Date and Time:</label>
-                        <input type="datetime-local" id="start-datetime" value={startDatetime}
-                               onChange={(e) => setStartDatetime(e.target.value)}/>
-                    </div>
-                    <div className="datetime-selection">
-                        <label htmlFor="end-datetime">End Date and Time:</label>
-                        <input type="datetime-local" id="end-datetime" value={endDatetime}
-                               onChange={(e) => setEndDatetime(e.target.value)}/>
+                    <div className="selection-container">
+                        <div className="selection-item">
+                            <label htmlFor="start-datetime">Start Date and Time:</label>
+                            <input type="datetime-local" id="start-datetime" value={startDatetime}
+                                   onChange={(e) => setStartDatetime(e.target.value)}/>
+                        </div>
+                        <div className="selection-item">
+                            <label htmlFor="parameter-select">Select Parameter:</label>
+                            <select id="parameter-select" value={parameter}
+                                    onChange={(e) => setParameter(e.target.value)}>
+                                {parameters.map(param => (
+                                    <option key={param.value} value={param.value}>{param.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="selection-item">
+                            <label htmlFor="end-datetime">End Date and Time:</label>
+                            <input type="datetime-local" id="end-datetime" value={endDatetime}
+                                   onChange={(e) => setEndDatetime(e.target.value)}/>
+                        </div>
                     </div>
                     <div className="chart-and-draggers">
                         <div className="dragger-container" onMouseDown={handleDrag('start')}>
