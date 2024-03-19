@@ -6,15 +6,15 @@ import random
 app = FastAPI()
 
 initial_data = {
-    'atm_pressure': {'value': 754.5, 'scale_factor': 0.5},
-    'humidity': {'value': 48.25, 'scale_factor': 0.2},
-    'temperature_average': {'value': 19.1, 'scale_factor': 0.3},
-    'temperature_infrared': {'value': 17.47, 'scale_factor': 0.3},
-    'illuminance': {'value': 5.0, 'scale_factor': 0.1},
-    'wind_dir_numeric': {'value': 10, 'scale_factor': 0.05},
-    'wind_speed': {'value': 0.3, 'scale_factor': 0.1},
-    'power_supply': {'value': 5.08, 'scale_factor': 0.05},
-    'battery_voltage': {'value': 0.02, 'scale_factor': 0.01},
+    'atm_pressure': {'value': 740, 'scale_factor': 0.8},
+    'humidity': {'value': 70, 'scale_factor': 0.5},
+    'temperature_average': {'value': 20, 'scale_factor': 0.5},
+    'temperature_infrared': {'value': 18, 'scale_factor': 0.5},
+    'illuminance': {'value': 10, 'scale_factor': 0.3},
+    'wind_dir_numeric': {'value': 180, 'scale_factor': 50},
+    'wind_speed': {'value': 10, 'scale_factor': 0.3},
+    'power_supply': {'value': 5.1, 'scale_factor': 0.1},
+    'battery_voltage': {'value': 3, 'scale_factor': 0.02},
     # 'gps_status':         {'value': True},
     # 'gps_longitude':      {'value': -122.419, 'scale_factor': 0.0001},
     # 'gps_latitude':       {'value': 37.7749,  'scale_factor': 0.0001},
@@ -29,7 +29,7 @@ def calculate_fluctuations(elapsed_time_seconds, sensor_name):
     random.seed(hash(sensor_name))  # Seed with the hash of the sensor's name
 
     # Generate biases for different time scales
-    biases = [random.uniform(-0.2, 0.2) for _ in periods]  # More significant biases
+    biases = [random.uniform(-0.5, 0.5) for _ in periods]
 
     # Calculate fluctuations for each period and apply the biases
     fluctuations = [
