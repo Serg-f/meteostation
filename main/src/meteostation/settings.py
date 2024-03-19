@@ -9,24 +9,20 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import json
+import logging
 from pathlib import Path
 import os
 
-from django.core.exceptions import ImproperlyConfigured
-
-
-def get_env_variable(var_name):
-    """Get the environment variable or return exception."""
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = f"Set the {var_name} environment variable."
-        raise ImproperlyConfigured(error_msg)
-
+# Logging
+log_level = os.getenv('LOG_LEVEL').upper()
+logging.basicConfig(level=log_level)
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+logger.debug(f"Django BASE_DIR: {BASE_DIR}")
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -37,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
 
 
 # Application definition
@@ -51,9 +47,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'meteo_app.apps.MeteoAppConfig',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,8 +66,7 @@ ROOT_URLCONF = 'meteostation.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,6 +80,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'meteostation.wsgi.application'
+ASGI_APPLICATION = 'meteostation.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
+
 
 
 # Database
@@ -150,3 +157,9 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 # Controller data process delay
 CONTROLLER_DATA_PROCESS_DELAY = 5
+
+# CORS
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

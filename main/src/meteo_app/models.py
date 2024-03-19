@@ -5,7 +5,7 @@ DIRECTIONS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
 
 
 class ControllerData(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     atm_pressure = models.FloatField(default=None, null=True, blank=True)
     humidity = models.FloatField(default=None, null=True, blank=True)
     temperature_average = models.FloatField(default=None, null=True, blank=True)
@@ -15,7 +15,7 @@ class ControllerData(models.Model):
     wind_speed = models.FloatField(default=None, null=True, blank=True)
     power_supply = models.FloatField(default=None, null=True, blank=True)
     battery_voltage = models.FloatField(default=None, null=True, blank=True)
-    gps_status = models.BooleanField(default=None, null=True, blank=True)
+    gps_status = models.BooleanField(default=False)
     gps_longitude = models.FloatField(default=None, null=True, blank=True)
     gps_latitude = models.FloatField(default=None, null=True, blank=True)
     gps_altitude = models.FloatField(default=None, null=True, blank=True)
@@ -34,3 +34,4 @@ class ControllerData(models.Model):
         verbose_name = 'Controller Data'
         verbose_name_plural = 'Controller Data'
 
+# tree -Ia "venv|__pycache__|.idea|.git|node_modules"

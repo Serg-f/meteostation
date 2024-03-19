@@ -12,7 +12,8 @@ postgres_data/
 .DS_Store
 Thumbs.db
 **/*local_settings.py
-**/migrations/
+**/migrations/*
+!**/migrations/__init__.py
 **/*.tmp
 **/*.bak
 .env/

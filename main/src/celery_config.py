@@ -13,4 +13,8 @@ app.conf.beat_schedule = {
         'task': 'meteo_app.tasks.fetch_and_save_controller_data',
         'schedule': crontab(minute='*/1'),  # every minute at 0 seconds
     },
+    'delete_old_controller_data': {
+        'task': 'meteo_app.tasks.delete_old_controller_data',
+        'schedule': crontab(hour='0', minute='0'),  # every day at midnight
+    },
 }

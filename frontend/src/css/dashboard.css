@@ -1,0 +1,65 @@
+.dashboard-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 20px 10px;
+    color: #FFF;
+}
+
+.chart-and-draggers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dragger-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 5px;
+    cursor: ew-resize;
+}
+
+.dragger {
+    background-color: #888;
+    width: 5px;
+    height: 150px; /* As you've set */
+}
+
+.dragger-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px; /* Adjust based on your preference */
+    color: #888; /* Icon color */
+}
+
+.chart-container {
+    flex-grow: 1;
+    height: 400px;
+    position: relative;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.dashboard-container div label {
+    margin-right: 1em;
+}
+
+.selection-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.selection-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px 10px;
+}
+
+.selection-item label {
+    margin-bottom: 5px; /* Space between label and input/select */
+}
