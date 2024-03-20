@@ -69,20 +69,27 @@ jobs:
           scp -r controller $USERNAME@$HOST:~
           scp -r frontend $USERNAME@$HOST:~
           scp -r main $USERNAME@$HOST:~
-          ssh -o StrictHostKeyChecking=no $USERNAME@$HOST << 'EOF'
-            docker-compose down
-            export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
-            export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
-            export POSTGRES_DB="${{ secrets.POSTGRES_DB }}"
-            export DEBUG="${{ secrets.DEBUG }}"
-            export SECRET_KEY="${{ secrets.SECRET_KEY }}"
-            export ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}"
-            export LOG_LEVEL="${{ secrets.LOG_LEVEL }}"
-            docker-compose -f docker-compose.yml up --build -d main_server
-            docker-compose exec -T main_server python manage.py makemigrations
-            docker-compose exec -T main_server python manage.py migrate
-            docker-compose -f docker-compose.yml up --build -d
+          ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "bash -s" << 'EOF'
+            docker compose down
+            export POSTGRES_USER="$POSTGRES_USER"
+            export POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+            export POSTGRES_DB="$POSTGRES_DB"
+            export DEBUG="$DEBUG"
+            export SECRET_KEY="$SECRET_KEY"
+            export ALLOWED_HOSTS="$ALLOWED_HOSTS"
+            export LOG_LEVEL="$LOG_LEVEL"
+            docker compose -f docker-compose.yml up --build -d main_server
+            docker compose exec -T main_server python manage.py makemigrations
+            docker compose exec -T main_server python manage.py migrate
+            docker compose -f docker-compose.yml up --build -d
           EOF
         env:
           USERNAME: ${{ secrets.USERNAME }}
           HOST: ${{ secrets.HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          DEBUG: ${{ secrets.DEBUG }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
