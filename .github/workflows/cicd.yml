@@ -78,10 +78,9 @@ jobs:
             export ALLOWED_HOSTS='$ALLOWED_HOSTS'
             export LOG_LEVEL='$LOG_LEVEL'
             docker compose down
-            docker compose -f docker-compose.yml up --build -d main_server
+            docker compose -f docker-compose.yml --profile production up --build -d
             docker compose exec -T main_server python manage.py makemigrations
             docker compose exec -T main_server python manage.py migrate
-            docker compose -f docker-compose.yml up --build -d
           EOF
         env:
           USERNAME: ${{ secrets.USERNAME }}
