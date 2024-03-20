@@ -159,7 +159,7 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 CONTROLLER_DATA_PROCESS_DELAY = 5
 
 # CORS
-# CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+# ]

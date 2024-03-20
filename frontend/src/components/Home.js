@@ -23,7 +23,8 @@ const Home = () => {
     });
 
     useEffect(() => {
-        let eventSource = new EventSource('http://localhost:8000/api/weather_data_sse/');
+        const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+        let eventSource = new EventSource('http://' + REACT_APP_API_URL + '/api/weather_data_sse/');
 
         eventSource.onmessage = function (event) {
             const newData = JSON.parse(event.data);

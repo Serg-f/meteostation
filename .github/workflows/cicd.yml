@@ -77,6 +77,7 @@ jobs:
             export SECRET_KEY='$SECRET_KEY'
             export ALLOWED_HOSTS='$ALLOWED_HOSTS'
             export LOG_LEVEL='$LOG_LEVEL'
+            export REACT_APP_API_URL='$REACT_APP_API_URL'
             docker compose down
             docker compose -f docker-compose.yml --profile production up --build -d
             docker compose exec -T main_server python manage.py makemigrations
@@ -92,3 +93,4 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
           LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}

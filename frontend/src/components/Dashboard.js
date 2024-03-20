@@ -136,7 +136,8 @@ const Dashboard = () => {
 
         useEffect(() => {
             const initializeWebSocket = () => {
-                ws.current = new WebSocket('ws://localhost:8000/ws/dashboard/');
+                const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+                ws.current = new WebSocket('ws://' + REACT_APP_API_URL + '/ws/dashboard/');
                 ws.current.onopen = () => {
                     console.log('WebSocket Connected');
                     requestData();
