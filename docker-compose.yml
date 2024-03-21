@@ -3,6 +3,8 @@ services:
   redis:
     image: "redis"
     container_name: "redis_con"
+    profiles:
+      - production
 
   db:
     image: "postgres:14"
@@ -15,6 +17,8 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     container_name: "postgresql_con"
+    profiles:
+      - production
 
   controller:
     build: ./controller
@@ -22,6 +26,8 @@ services:
     volumes:
       - ./controller/src:/project_dir
     container_name: "controller_con"
+    profiles:
+      - production
 
   main_server:
     build: ./main
@@ -42,6 +48,8 @@ services:
       - db
       - redis
     container_name: "main_server_con"
+    profiles:
+      - production
 
   celery_worker:
     build: ./main
@@ -62,6 +70,8 @@ services:
       - controller
       - main_server
     container_name: "celery_worker_con"
+    profiles:
+      - production
 
   celery_beat:
     build: ./main
@@ -83,14 +93,21 @@ services:
       - controller
       - celery_worker
     container_name: "celery_beat_con"
+    profiles:
+      - production
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
     ports:
       - "3000:80"
     depends_on:
       - main_server
     container_name: "frontend_con"
+    profiles:
+      - production
 
   main_tests:
     build: ./main
@@ -106,6 +123,8 @@ services:
     volumes:
       - ./main/src:/project_dir
     container_name: "main_tests_con"
+    profiles:
+      - test
 
 
   controller_tests:
@@ -114,3 +133,5 @@ services:
     volumes:
       - ./controller/src:/project_dir
     container_name: "controller_tests_con"
+    profiles:
+      - test

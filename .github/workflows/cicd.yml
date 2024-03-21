@@ -1,0 +1,96 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, microservices ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis
+        options: --entrypoint redis-server
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Build the Docker images
+        run: docker-compose build
+
+      - name: Run tests for main service
+        run: docker-compose up main_tests
+
+      - name: Run tests for controller service
+        run: docker-compose up controller_tests
+
+      - name: Shutdown
+        run: docker-compose down
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/microservices'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to DigitalOcean
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml $USERNAME@$HOST:~/
+          scp -r controller $USERNAME@$HOST:~
+          scp -r frontend $USERNAME@$HOST:~
+          scp -r main $USERNAME@$HOST:~
+          ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "bash -s" -- <<EOF
+            export POSTGRES_USER='$POSTGRES_USER'
+            export POSTGRES_PASSWORD='$POSTGRES_PASSWORD'
+            export POSTGRES_DB='$POSTGRES_DB'
+            export DEBUG='$DEBUG'
+            export SECRET_KEY='$SECRET_KEY'
+            export ALLOWED_HOSTS='$ALLOWED_HOSTS'
+            export LOG_LEVEL='$LOG_LEVEL'
+            export REACT_APP_API_URL='$REACT_APP_API_URL'
+            docker compose down
+            docker compose -f docker-compose.yml --profile production up --build -d
+            docker compose exec -T main_server python manage.py makemigrations
+            docker compose exec -T main_server python manage.py migrate
+          EOF
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          HOST: ${{ secrets.HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          DEBUG: ${{ secrets.DEBUG }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
