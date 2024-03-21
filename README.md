@@ -1,40 +1,47 @@
 # Weather Station App
 
-Welcome to the Weather Station App repository, a sophisticated platform designed for the observation, collection, storage, and analysis of data received from various weather sensors. This application processes diverse meteorological parameters including atmospheric pressure, temperature, humidity, wind speed and direction, among others, employing a microservices architecture with RESTful API design. It consists of three core services alongside several auxiliary services, providing a robust solution for real-time weather data monitoring and analysis.
+Welcome to the repository for the Weather Station App, a sophisticated platform designed for the observation, collection, storage, and analysis of data received from various weather sensors. This application processes a wide range of data including atmospheric pressure, temperature, humidity, wind speed and direction, among others. Built using a microservices RESTful API architecture, the app consists of three core services along with a few additional services, ensuring a robust and scalable solution for weather data management.
 
-## Key Features
+## Core Services
 
-- **Microservices Architecture**: Built using a microservices RESTful API architecture to ensure scalability and flexibility of the application.
-- **Real-Time Data Processing**: Utilizes FastAPI and Django REST Framework (DRF) to handle real-time data processing from various weather sensors.
-- **Dynamic Data Storage**: Employs PostgreSQL for robust data storage, with automatic deletion of data older than 90 days using Celery scheduled tasks.
-- **Fault Tolerance**: Designed to continue processing available data smoothly, even in the event of sensor or controller failures.
-- **Real-Time Monitoring and Interactive Reporting**: Features a React-based frontend for real-time weather data monitoring and interactive graph-based reporting on different parameters over selectable time periods.
-- **Comprehensive Testing and Logging**: Implements extensive testing with unittest for DRF services and pytest for FastAPI services, alongside detailed logging using Python's `logging` module.
+### Controller Service
+The Controller Service simulates responses from micro-controllers connected to different weather sensors. It is built with FastAPI and accounts for data fluctuations over various periods (hour, day, month, year), responding with JSON when requested.
+
+### Main Service
+The Main Service, built with Django REST Framework (DRF), is scheduled to request data from the Controller Service every 5 seconds using Celery and Redis, storing it in a PostgreSQL database. It handles data deletion for records older than 90 days and continues processing available data even if some sensors or the controller fail. The service is dockerized alongside Redis, Celery worker, Celery beat, and PostgreSQL for isolated and efficient operation.
+
+### Frontend Service
+The Frontend Service, built with React, offers real-time weather data monitoring and interactive graph-based reports for various parameters over selected periods. It establishes a Server-Sent Events (SSE) connection to the Main Service for real-time updates and uses WebSockets for interactive dashboard functionalities.
 
 ## Technologies Used
 
-### Backend
-- **FastAPI** for the Controller Service, simulating micro-controller responses.
-- **Django REST Framework** for the Main Service, orchestrating data collection, processing, and storage.
-- **Celery with Redis** for scheduling data fetches every 5 seconds and for deleting old data.
-- **PostgreSQL** for durable and efficient data storage.
+- **Backend**: Django, Django REST Framework, FastAPI, Celery, Redis
+- **Frontend**: JavaScript, React, HTML, CSS, Bootstrap
+- **Database**: PostgreSQL
+- **Data Streaming**: SSE (Server-Sent Events), WebSockets
+- **Testing**: Unittest (for DRF services), Pytest (for FastAPI services)
+- **CI/CD**: GitHub Actions, Docker, Docker Compose
+- **Deployment**: DigitalOcean, Nginx
 
-### Frontend
-- **React** for building a dynamic and responsive user interface.
-- **JavaScript, HTML, CSS** for frontend scripting and styling.
-- **Bootstrap** for responsive design ensuring a seamless user experience across devices.
+## Architecture
 
-### DevOps
-- **Docker and Docker Compose** for containerization and orchestration of microservices.
-- **GitHub Actions** for CI/CD, automating the testing and deployment pipeline.
-- **Digital Ocean, Nginx** for hosting and reverse proxy services.
+The application's architecture is designed for scalability and resilience. The microservices approach allows for independent development, deployment, and scaling of each service. The use of Docker and Docker Compose ensures easy deployment and management of services, while GitHub Actions facilitate continuous integration and deployment processes.
 
-## Application Workflow
+## Logging and Monitoring
 
-1. **Data Collection**: The Controller Service, built with FastAPI, simulates responses from weather sensors, offering data on various meteorological parameters.
-2. **Data Processing and Storage**: The Main Service, implemented with Django REST Framework, is scheduled to fetch data from the Controller Service every 5 seconds, storing it in a PostgreSQL database.
-3. **Real-Time Monitoring and Analysis**: The Frontend Service, created with React, provides real-time monitoring and interactive analysis features, allowing users to visualize weather data over different time periods through interactive graphs.
-4. **Fault Tolerance and Reliability**: The system is designed to handle failures gracefully, ensuring continuous operation and data processing even in the event of sensor or controller downtime.
+Logging is implemented across all services using Python's `logging` module, with different log levels to capture and diagnose issues effectively. Monitoring and analysis of logs are crucial for maintaining the operational health of the application.
+
+## Testing
+
+Comprehensive testing is performed using Unittest for the DRF-based Main Service and Pytest for the FastAPI-based Controller Service. Tests are run in separate containers to ensure consistency in the testing environment.
+
+## Data Handling and Analysis
+
+The app efficiently collects, stores, and analyzes weather data, offering insights through real-time updates and interactive dashboards. Data is managed with a focus on performance and scalability, using technologies like Redis for message brokering and PostgreSQL for reliable data storage.
+
+## Conclusion
+
+This Weather Station App represents a full-fledged solution for managing and analyzing weather data. Through its use of modern technologies and architectural practices, it offers a powerful tool for weather observation and analysis.
 
 ## Live Application
 
